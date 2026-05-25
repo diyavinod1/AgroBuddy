@@ -1,314 +1,183 @@
-# AgroBuddy
+# 🌱 AgroBuddy
 
-AI-Powered Farmer Assistance Telegram Bot Using Computer Vision and Conversational AI.
+### 🤖 Your AI Farming Buddy on Telegram (because plants deserve tech support too)
 
-AgroBuddy is a production-ready Python project for a Telegram farming assistant. Farmers can send crop photos, voice notes, or text questions and receive disease prediction, remedies, fertilizer suggestions, prevention steps, and conversational guidance in English, Hindi, Tamil, Malayalam, and Kannada.
+AgroBuddy is an AI-powered assistant that helps farmers understand their crops using **chat, images, and voice messages** — basically like a "doctor for plants", but without the waiting room.
 
-## Features
+If your plant looks sad 🌿 → AgroBuddy tries to figure out why.
 
-- Telegram bot commands: `/start`, `/help`, `/predict`, `/history`, `/language`, `/about`, `/settings`
-- FastAPI backend with Swagger docs at `http://localhost:8000/docs`
-- Crop image preprocessing with OpenCV
-- TensorFlow/Keras model loading for PlantVillage transfer-learning classifiers
-- Runnable heuristic fallback when no large model artifact is present
-- Grad-CAM explainability when a trained CNN model is loaded
-- SambaNova conversational AI integration
-- Sarvam speech-to-text and text-to-speech integration
-- gTTS fallback for speech output
-- Supabase persistence for users, chat history, language, and predictions
-- Docker and Docker Compose deployment
+If you're confused 🤔 → AgroBuddy explains like a patient farming friend.
 
-## Project Structure
+If you're lazy to type 🎙️ → just speak.
 
-```text
+---
+
+## ⚡ What AgroBuddy actually does
+
+- 🧠 Remembers your plants (yes, it has memory… better than some humans)
+- 📸 Looks at crop images and tries to diagnose issues
+- 💬 Gives farming advice like fertilizers, irrigation, and prevention tips
+- 🎙️ Understands voice messages (because typing is hard in 2026)
+- 🌍 Talks in multiple Indian languages
+- 🗄️ Stores your chats so it doesn't "forget your chilli plant"
+- ⚡ Uses AI to answer farming questions in real time
+
+---
+
+## 🧠 How it works (simple version)
+
+AgroBuddy is basically a team of tiny digital brains working together:
+
+- 💬 Telegram Bot → talks to users
+- 🧠 AI Brain (OpenRouter LLMs) → answers questions
+- 🗄️ Database (Supabase) → remembers conversations
+- 📸 Vision module → checks plant images
+- 🎤 Voice system → listens & speaks back
+
+Think of it like:
+
+> "ChatGPT + Plant Doctor + Memory + WhatsApp-like interface"
+
+---
+
+## 🛠️ Tech Stack (aka ingredients)
+
+- Python 🐍 (because obviously)
+- FastAPI ⚡
+- Telegram Bot API 🤖
+- OpenRouter (LLMs 🧠)
+- Supabase 🗄️
+- OpenCV 👀
+- TensorFlow (optional… when it behaves)
+- gTTS / Sarvam AI 🎙️
+- Docker 🐳 (for pretending we are DevOps engineers)
+
+---
+
+## 📁 Project Structure
+
+```
 AgroBuddy/
-├── backend/
-│   ├── api/
-│   ├── core/
-│   ├── services/
-│   ├── models/
-│   ├── schemas/
-│   ├── database/
-│   └── main.py
-├── bot/
-│   ├── handlers/
-│   ├── commands/
-│   ├── services/
-│   └── bot.py
-├── ml/
-│   ├── model_loader/
-│   ├── inference/
-│   ├── preprocessing/
-│   └── explainability/
-├── research/
-├── docs/
-├── tests/
-├── uploads/
-├── models/
-├── scripts/
-├── requirements.txt
-├── Dockerfile
-├── docker-compose.yml
-└── README.md
+├── backend/   # brain of the system 🧠
+├── bot/       # talks to humans (important job)
+├── ml/        # tries to understand plants 🌿
+├── models/    # trained "plant wisdom"
+├── scripts/   # training rituals
+├── tests/     # where we hope nothing breaks
+└── uploads/   # plant selfies 📸
 ```
 
-## 1. Create API Keys
+---
 
-### Telegram
+## ⚙️ Setup (don't worry, it's not scary)
 
-1. Open Telegram and message `@BotFather`.
-2. Send `/newbot`.
-3. Choose a bot name and username.
-4. Copy the bot token into `.env` as `TELEGRAM_BOT_TOKEN`.
-
-### Supabase
-
-1. Create a project at Supabase.
-2. Open SQL Editor.
-3. Copy and run the SQL from `backend/database/schema.sql`.
-4. Open Project Settings > API.
-5. Copy Project URL to `SUPABASE_URL`.
-6. Copy the service role key to `SUPABASE_KEY`. AgroBuddy runs server-side, so this key must stay only in `.env` on your trusted server.
-
-### SambaNova
-
-1. Create a SambaNova account.
-2. Generate an API key.
-3. Add it to `.env` as `SAMBANOVA_API_KEY`.
-
-### Sarvam
-
-1. Create a Sarvam AI account.
-2. Generate an API key.
-3. Add it to `.env` as `SARVAM_API_KEY`.
-
-## 2. Configure Environment
+### 1. Clone it
 
 ```bash
-cp .env.example .env
+git clone https://github.com/diyavinod1/AgroBuddy
+cd AgroBuddy
 ```
 
-Edit `.env`:
-
-```env
-TELEGRAM_BOT_TOKEN=your_telegram_token
-SAMBANOVA_API_KEY=your_sambanova_key
-SARVAM_API_KEY=your_sarvam_key
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_KEY=your_supabase_key
-JWT_SECRET=change_this_to_a_long_random_secret
-```
-
-The bot and API run after filling only those required values. Optional model variables already have defaults.
-
-## 3. Local Installation
-
-Python 3.11 is recommended.
+### 2. Install dependencies
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-Run the API:
+### 3. Create `.env`
 
-```bash
-python -m uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
+```env
+TELEGRAM_BOT_TOKEN=your_token
+LLM_API_KEY=your_key
+LLM_MODEL=meta-llama/llama-3.1-8b-instruct
+SUPABASE_URL=your_url
+SUPABASE_KEY=your_key
+SARVAM_API_KEY=your_key
+JWT_SECRET=your_secret
 ```
 
-Run the Telegram bot in another terminal:
+### 4. Run it 🚀
 
 ```bash
-source .venv/bin/activate
+# backend
+python -m uvicorn backend.main:app --reload
+
+# bot
 python -m bot.bot
 ```
 
-Open Swagger:
+---
 
-```text
-http://localhost:8000/docs
-```
+## 🌾 How to use AgroBuddy
 
-## 4. Docker Setup
+Just talk to it like a confused farmer (or developer):
 
-```bash
-docker compose up --build
-```
+- `/start` → say hello
+- Send 🌿 image → "what's wrong with my plant?"
+- Send 💬 text → farming advice
+- Send 🎙️ voice → because typing is overrated
 
-API:
+---
 
-```text
-http://localhost:8000/health
-```
-
-Swagger:
-
-```text
-http://localhost:8000/docs
-```
-
-## 5. Model Setup
-
-AgroBuddy runs immediately with a deterministic image-analysis fallback. For research or production accuracy, train a PlantVillage transfer-learning classifier:
-
-```bash
-python scripts/train_plantvillage.py \
-  --data-dir /path/to/PlantVillage \
-  --output-model models/plant_disease_model.keras \
-  --output-labels models/labels.json \
-  --epochs 8
-```
-
-The dataset directory must contain one folder per class, for example:
-
-```text
-PlantVillage/
-├── Tomato___Late_blight/
-├── Tomato___Early_blight/
-├── Potato___Late_blight/
-└── Corn___Common_rust/
-```
-
-After training, restart the API and bot. AgroBuddy automatically loads `models/plant_disease_model.keras` and `models/labels.json`.
-
-## 6. API Usage
-
-Health:
-
-```bash
-curl http://localhost:8000/health
-```
-
-Chat:
-
-```bash
-curl -X POST http://localhost:8000/chat \
-  -H "Content-Type: application/json" \
-  -d '{"telegram_user_id":12345,"message":"How often should I irrigate tomato?","language":"en"}'
-```
-
-Predict:
-
-```bash
-curl -X POST http://localhost:8000/predict \
-  -F "telegram_user_id=12345" \
-  -F "image=@leaf.jpg"
-```
-
-History:
-
-```bash
-curl http://localhost:8000/history/12345
-```
-
-Speech-to-text:
-
-```bash
-curl -X POST http://localhost:8000/speech-to-text \
-  -F "language=en" \
-  -F "audio=@voice.ogg"
-```
-
-Text-to-speech:
-
-```bash
-curl -X POST http://localhost:8000/text-to-speech \
-  -F "language=en" \
-  -F "text=Water near the roots early in the morning." \
-  --output reply.mp3
-```
-
-## 7. Telegram Usage
-
-Start the bot on Telegram:
-
-```text
-/start
-```
-
-Then try:
-
-```text
-/language
-hi
-```
-
-Send a leaf photo for disease prediction, or ask:
-
-```text
-What fertilizer should I use for tomato flowering stage?
-```
-
-Send a voice note to receive both text and voice replies.
-
-## 8. Testing
+## 🧪 Testing
 
 ```bash
 pytest
-```
-
-Run linting:
-
-```bash
 ruff check .
 ```
 
-## 9. Deployment Guide
+---
 
-For a VM deployment:
+## 🚀 Deployment note
 
-```bash
-git clone <your-repo-url> AgroBuddy
-cd AgroBuddy
-cp .env.example .env
-nano .env
-docker compose up --build -d
-```
+This project is designed to run anywhere… except when Python versions decide to have a personality crisis.
 
-Confirm:
+⚠️ If deployment fails, it is usually:
 
-```bash
-docker compose ps
-curl http://localhost:8000/health
-```
+- Python version mismatch 😭
+- TensorFlow being dramatic 🤡
+- Or the universe testing you
 
-For production:
+---
 
-- Use Supabase service role key only on trusted servers.
-- Put the API behind HTTPS with Nginx, Caddy, or a cloud load balancer.
-- Mount persistent volumes for `uploads/` and `models/`.
-- Keep `.env` out of Git.
-- Rotate API keys periodically.
+## 👥 Team AgroBuddy
 
-## 10. Troubleshooting
+- **Diya Vinod** — Team Lead (a.k.a. "why is this not working yet" person)
+- **Sarulatha S** — ML & AI (teaches machines how to see plants)
+- **Subin Raj P** — Backend & Bot (makes sure the bot actually replies instead of ghosting users)
 
-`TELEGRAM_BOT_TOKEN is missing`
+---
 
-- Fill `.env` and restart the bot.
+## 🎯 Mission
 
-`Supabase is not configured`
+To make farming advice:
+- as easy as sending a WhatsApp message
+- and slightly smarter than asking your neighbor.
 
-- Fill `SUPABASE_URL` and `SUPABASE_KEY`.
-- Run `backend/database/schema.sql` in Supabase SQL Editor.
+---
 
-`SambaNova API failed`
+## 🔮 Future Ideas (if we survive exams)
 
-- Check `SAMBANOVA_API_KEY`.
-- Confirm `SAMBANOVA_MODEL` is available in your account.
+- 🌦️ Weather-based crop advice
+- 🚁 Drone-based crop scanning
+- 📊 Yield prediction
+- 🏛️ Government scheme recommendations
+- 📱 Offline farmer app
 
-`gTTS failed`
+---
 
-- gTTS requires internet access. Use Sarvam TTS in production for a stronger speech path.
+## 📌 Status
 
-`TensorFlow install is slow`
+- 🟡 "Works perfectly on my machine" stage
+- 🧪 Actively being improved
+- ☕ Powered by late-night debugging sessions
 
-- TensorFlow is large. Use Docker for the simplest repeatable setup.
+---
 
-## Security Notes
+## ❤️ Final Note
 
-- Do not commit `.env`.
-- Keep Supabase Row Level Security enabled.
-- Prefer a service role key only in secure backend environments.
-- Validate uploaded file types before storage. AgroBuddy already checks image content type in the API.
+AgroBuddy is not just a project.
+It's an attempt to make AI feel less like "AI"
+and more like a helpful farming friend who never sleeps 🌱
