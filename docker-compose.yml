@@ -1,0 +1,26 @@
+services:
+  api:
+    build: .
+    container_name: agrobuddy-api
+    command: scripts/start_api.sh
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./models:/app/models
+    restart: unless-stopped
+
+  bot:
+    build: .
+    container_name: agrobuddy-bot
+    command: scripts/start_bot.sh
+    env_file:
+      - .env
+    volumes:
+      - ./uploads:/app/uploads
+      - ./models:/app/models
+    restart: unless-stopped
+    depends_on:
+      - api
